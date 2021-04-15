@@ -14,10 +14,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// export default class Floor extends Component {
 export default function Floor(props) {
   const classes = useStyles();
-  const [status, setStatus] = useState('Call');
 
   return (
     // <div className="flexFloor">
@@ -36,7 +34,6 @@ export default function Floor(props) {
           </Paper>
         </Grid>
       )}
-      <button style={{ width: 100 + 'px', height: 50 + 'px' }} onClick={props.callingElevator(props.floorIndex)}>{status}</button>
     </React.Fragment>
   )
 }

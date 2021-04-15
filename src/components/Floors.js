@@ -1,34 +1,33 @@
-import React, { Component } from 'react'
+import React, { useState, Component } from 'react'
 import Floor from './Floor'
 import Grid from '@material-ui/core/Grid';
 // import Paper from '@material-ui/core/Paper';
 // import { makeStyles } from '@material-ui/core/styles';
 
-export default class Floors extends Component {
+export default function Floors(props) {
+  const [status, setStatus] = useState('Call');
 
+  // const handleCallingElevator = (val) => {
+  //   console.log('test caliing');
+  //   console.log(val);
+  // }
 
-  handleCallingElevator = (val) => {
-    console.log('test caliing');
-    console.log(val);
-  }
-
-  render() {
-    return (
-      <div style={{ margin: 50 + 'px' }}>
-        {this.props.floors.map((floor, index) => {
-          // return (
-          //   <Floor key={index} callingElevator={this.handleCallingElevator} {...floor}></Floor>
-          // )
-          return (
-            <Grid key={index} container spacing={1}>
-              <Grid container item >
-                <Floor key={index} callingElevator={() => this.handleCallingElevator} {...floor}></Floor>
-              </Grid>
+  return (
+    <div style={{ margin: 50 + 'px' }}>
+      {props.floors.map((floor, index) => {
+        // return (
+        //   <Floor key={index} callingElevator={this.handleCallingElevator} {...floor}></Floor>
+        // )
+        return (
+          <Grid key={index} container spacing={1}>
+            <Grid container item >
+              <Floor key={index} {...floor}></Floor>
+              <button style={{ width: 100 + 'px', height: 50 + 'px' }} onClick={() => props.callingElevator(floor.floorIndex)}>{status}</button>
             </Grid>
-          )
-        })}
-      </div>
-    )
-  }
+          </Grid>
+        )
+      })}
+    </div>
+  )
 }
 
