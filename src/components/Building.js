@@ -51,22 +51,16 @@ export default function Building() {
   }
 
   const handleCallingElevator = (requestedFloorIndex, elevatorIndex, countFloors) => {
-    console.log('handlecallingelevator');
     // delete the requested floor from the queqe (maybe not push at all in floorBtnPressed func and only in findingClosetElevator func?)
     elevatorsDestinationQueue.pop();
 
-    // Measure the time it took the elevator to reach the designated floor
-    // I'm assuming each floor takes 0.5 sec
-    const time = countFloors * 500;
-    setTimeout(() => {
-      whenElevatorReachedFloor(requestedFloorIndex, elevatorIndex);
-    }, time);
-
     let elevator = elevators[elevatorIndex];
-    const direction = elevator.currentFloorIndex < requestedFloorIndex ? 'up' : 'down';
-    elevator.direction = direction;
-    elevator.isMoving = true;
-    elevator.currentFloorIndex = requestedFloorIndex;
+    // Measure the time it took the elevator to reach the designated floor
+    // I'm assuming each floor takes 0.5 sec.
+    const time = countFloors * 500; // TODO need to handle the time when all the elevators are occupied ?
+    // Present the time it took the elevator to reach the floor
+    elevator.timeToReachFloor = time / 1000 + " Sec.";
+    elevator.detinationFloor = requestedFloorIndex;
 
     let updatedElevators = elevators.map((e, i) => {
       if (i === elevatorIndex)
@@ -75,7 +69,25 @@ export default function Building() {
     });
     setElevators(updatedElevators);
 
-    // The elevator should move toward the select floor in a smooth movement
+    // Waiting this time ...
+    setTimeout(() => {
+      const direction = elevator.currentFloorIndex < requestedFloorIndex ? 'up' : 'down';
+      elevator.direction = direction;
+      elevator.isMoving = true;
+      elevator.currentFloorIndex = requestedFloorIndex;
+
+      let updatedElevators = elevators.map((e, i) => {
+        if (i === elevatorIndex)
+          return elevator;
+        return e;
+      });
+      setElevators(updatedElevators);
+
+      whenElevatorReachedFloor(requestedFloorIndex, elevatorIndex);
+    }, time);
+
+
+
   }
 
   const whenElevatorReachedFloor = (requestedFloorIndex, elevatorIndex) => {
@@ -85,7 +97,9 @@ export default function Building() {
     let elevator = elevators[elevatorIndex];
     elevator.direction = 'static';
     elevator.isMoving = false;
-    elevator.currentFloorIndex = requestedFloorIndex;
+    elevator.timeToReachFloor = '';
+    elevator.detinationFloor = null;
+
     let updatedElevators = elevators.map((e, i) => {
       if (i === elevatorIndex)
         return elevator;
