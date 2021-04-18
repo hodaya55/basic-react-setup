@@ -11,13 +11,25 @@ export const generateFloors = () => {
     { name: '6th' },
     { name: '7th' },
     { name: '8th' },
-    { name: '9th' }]
+    { name: '9th' }];
+
   let _floors = floors.map((floor, i) => {
     floor['floorIndex'] = i;
-    floor['cols'] = [false, false, false, false, false]
+    floor['isPending'] = false;
     return floor;
   })
 
-  floors[0].cols = [true, true, true, true, true];
   return _floors.reverse();
+};
+
+export const generateElevators = () => {
+  const elevators = [
+    { currentFloorIndex: 0, isMoving: null, direction: 'static' },
+    { currentFloorIndex: 0, isMoving: null, direction: 'static' },
+    { currentFloorIndex: 0, isMoving: null, direction: 'static' },
+    { currentFloorIndex: 0, isMoving: null, direction: 'static' },
+    { currentFloorIndex: 0, isMoving: null, direction: 'static' },
+  ]
+
+  return elevators;
 };
