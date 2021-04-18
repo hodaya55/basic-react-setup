@@ -7,8 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
   floorElevatorBtn: {
     width: '100px',
-    height: '50px',
-    marginLeft: '15px',
+    height: '40px',
+    margin: 'auto 5px',
   }
 }));
 
@@ -23,19 +23,17 @@ export default function Floors(props) {
   }
 
   const displayBtn = (floor) => {
-    const reachedFloor = props.elevators.filter((e, i) => (e.currentFloorIndex === floor.floorIndex));
-    console.log(floor);
-    console.log(reachedFloor);
-    // if (reachedFloor) { // TODO
-    if (reachedFloor && !floor.isPending) {
-      return <Button variant={floor.isPending ? 'danger' : 'success'} onClick={() => floorBtnPressed(floor.floorIndex)} className={classes.floorElevatorBtn}>{floor.isPending ? waitingLabel : callLabel}</Button>
-    } else {
+    if (floor.isPending === null) {
+      return <Button variant='success' onClick={() => floorBtnPressed(floor.floorIndex)} className={classes.floorElevatorBtn}>{callLabel}</Button>
+    } else if (floor.isPending) {
+      return <Button variant='danger' onClick={() => floorBtnPressed(floor.floorIndex)} className={classes.floorElevatorBtn}>{waitingLabel}</Button>
+    } else { //     false
       return <Button variant="outline-success" className={classes.floorElevatorBtn}>{arrivedLabel}</Button>
     }
   }
 
   return (
-    <div style={{ margin: 50 + 'px' }}>
+    <div style={{ margin: '50px' }}>
       {props.floors.map((floor, index) => {
         return (
           <Grid key={index} container >

@@ -13,7 +13,6 @@ export default function Building() {
 
   const floorBtnPressed = (fIndex) => {
     // console.log('floorIndex: ', fIndex);
-
     let _floors = floors.map((f, i) => {
       if (f.floorIndex === fIndex) {
         f.isPending = true;
@@ -23,7 +22,6 @@ export default function Building() {
     setFloors(_floors);
 
     elevatorsDestinationQueue.push(fIndex);
-    console.log('requested Floors', elevatorsDestinationQueue);
 
     // Checking here if an elevator avialable to come to this floorIndex and find the closet one
     findingClosetElevator(fIndex);
@@ -32,15 +30,14 @@ export default function Building() {
   const findingClosetElevator = (floorIndex) => {
     // Identify the closet elevator to the floor, and send the elevator to that floor
     const avialableElevators = elevators.filter(e => !e.isMoving);
-    console.log('avialableElevators', avialableElevators);
+    // console.log('avialable Elevators', avialableElevators);
     if (avialableElevators.length) {
       const distances = avialableElevators.map((e, i) => {
         return { distance: Math.abs(floorIndex - e.currentFloorIndex), elevatorIndex: i }
       });
       const closetElevator = distances.reduce((prev, curr) => prev.distance < curr.distance ? prev : curr);
-      const closetElevatorIndex = closetElevator.elevatorIndex;
 
-      handleCallingElevator(floorIndex, closetElevatorIndex, closetElevator.distance);
+      handleCallingElevator(floorIndex, closetElevator.elevatorIndex, closetElevator.distance);
 
       // Wait 2 seconds before moving to the next call (If exists)
       if (elevatorsDestinationQueue.length > 0) {
@@ -54,22 +51,16 @@ export default function Building() {
   }
 
   const handleCallingElevator = (requestedFloorIndex, elevatorIndex, countFloors) => {
-    console.log('handlecallingelevator');
-    // delete the requested floor from the queqe (maybe not push at all in floorBtnPressed func?)
+    // delete the requested floor from the queqe (maybe not push at all in floorBtnPressed func and only in findingClosetElevator func?)
     elevatorsDestinationQueue.pop();
 
-    // Measure the time it took the elevator to reach the designated floor
-    // I'm assuming each floor takes 0.5 sec
-    const timeout = countFloors * 500;
-    setTimeout(() => {
-      whenElevatorReachedFloor(requestedFloorIndex, elevatorIndex);
-    }, timeout);
-
     let elevator = elevators[elevatorIndex];
-    const direction = elevator.currentFloorIndex < requestedFloorIndex ? 'up' : 'down';
-    elevator.direction = direction;
-    elevator.isMoving = true;
-    elevator.currentFloorIndex = requestedFloorIndex;
+    // Measure the time it took the elevator to reach the designated floor
+    // I'm assuming each floor takes 0.5 sec.
+    const time = countFloors * 500; // TODO need to handle the time when all the elevators are occupied ?
+    // Present the time it took the elevator to reach the floor
+    elevator.timeToReachFloor = time / 1000 + " Sec.";
+    elevator.detinationFloor = requestedFloorIndex;
 
     let updatedElevators = elevators.map((e, i) => {
       if (i === elevatorIndex)
@@ -78,7 +69,25 @@ export default function Building() {
     });
     setElevators(updatedElevators);
 
-    // The elevator should move toward the select floor in a smooth movement
+    // Waiting this time ...
+    setTimeout(() => {
+      const direction = elevator.currentFloorIndex < requestedFloorIndex ? 'up' : 'down';
+      elevator.direction = direction;
+      elevator.isMoving = true;
+      elevator.currentFloorIndex = requestedFloorIndex;
+
+      let updatedElevators = elevators.map((e, i) => {
+        if (i === elevatorIndex)
+          return elevator;
+        return e;
+      });
+      setElevators(updatedElevators);
+
+      whenElevatorReachedFloor(requestedFloorIndex, elevatorIndex);
+    }, time);
+
+
+
   }
 
   const whenElevatorReachedFloor = (requestedFloorIndex, elevatorIndex) => {
@@ -88,7 +97,9 @@ export default function Building() {
     let elevator = elevators[elevatorIndex];
     elevator.direction = 'static';
     elevator.isMoving = false;
-    elevator.currentFloorIndex = requestedFloorIndex;
+    elevator.timeToReachFloor = '';
+    elevator.detinationFloor = null;
+
     let updatedElevators = elevators.map((e, i) => {
       if (i === elevatorIndex)
         return elevator;
@@ -96,9 +107,17 @@ export default function Building() {
     });
     setElevators(updatedElevators);
 
+    let floor = floors.find(f => f.floorIndex === requestedFloorIndex);
+    floor.isPending = false; // Change the button text to “arrived”
+    let updatedFloors = floors.map((f, i) => {
+      if (f.floorIndex === requestedFloorIndex)
+        return floor;
+      return f;
+    });
+    setFloors(updatedFloors);
 
-    // After the 2 seconds, change the elevator color back to black, and change the
-    // button to “call”, with the initial design
+    // After the 2 seconds, change the elevator color back to black,
+    // and change the button to “call”, with the initial design
     setTimeout(() => {
       elevator.isMoving = null;
       let updatedElevators = elevators.map((e, i) => {
@@ -108,20 +127,20 @@ export default function Building() {
       });
       setElevators(updatedElevators);
 
-      let floor = floors[requestedFloorIndex];
-      floor.isPending = false;
+      floor.isPending = null;
       let updatedFloors = floors.map((f, i) => {
-        if (i === requestedFloorIndex)
+        if (f.floorIndex === requestedFloorIndex)
           return floor;
         return f;
       });
       setFloors(updatedFloors);
+      // console.table(updatedFloors);
 
     }, 2000);
   }
 
   return (
-    <div>
+    <div className="center">
       <Floors floorBtnPressed={floorBtnPressed} floors={floors} elevators={elevators} />
     </div>
   )

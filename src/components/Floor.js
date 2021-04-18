@@ -12,18 +12,25 @@ const useStyles = makeStyles((theme) => ({
     padding: '5px',
     width: '150px',
     height: '60px',
+  },
+  floorName: {
+    width: 105 + 'px', paddingRight: '5px', fontWeight: 'bold', textAlign: 'right', margin: 'auto'
   }
 }));
 
 export default function Floor(props) {
   const classes = useStyles();
 
+  // bonus: Present the time it took the elevator to reach the floor
+  const waitingTimeLabel = props.timeToReachFloor;
+
   return (
     <React.Fragment>
-      <h6 style={{ width: 100 + 'px', margin: 'auto 0' }}>{props.name}</h6>
+      <h6 className={classes.floorName}>{props.name}</h6>
       {props.elevators.map((e, i) =>
         <div className={classes.box} key={i}>
-          {e.currentFloorIndex === props.floorIndex ? <Elevator {...e} /> : ''}
+          {e.currentFloorIndex === props.floorIndex ? <Elevator {...e} /> :
+            e.detinationFloor === props.floorIndex ? <span className="center"> {e.timeToReachFloor}</span> : ''}
         </div>
       )}
     </React.Fragment>

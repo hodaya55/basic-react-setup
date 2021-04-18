@@ -1,14 +1,16 @@
 import './App.css';
 import Building from './Building';
 
+
 function App() {
 
-  // TODO: create an entry point to the application
   return (
-    <div >
+    <div style={{ backgroundColor: 'lightgray' }}>
       <Building />
-    </div>
+      <span>Created by Hodaya P.</span>
+    </div >
   );
 }
+
 
 export default App;

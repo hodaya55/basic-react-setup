@@ -15,7 +15,7 @@ export const generateFloors = () => {
 
   let _floors = floors.map((floor, i) => {
     floor['floorIndex'] = i;
-    floor['isPending'] = false;
+    floor['isPending'] = null;
     return floor;
   })
 
