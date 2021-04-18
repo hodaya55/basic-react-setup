@@ -60,7 +60,8 @@ export default function Building() {
     const time = countFloors * 500; // TODO need to handle the time when all the elevators are occupied ?
     // Present the time it took the elevator to reach the floor
     elevator.timeToReachFloor = time / 1000 + " Sec.";
-    elevator.detinationFloor = requestedFloorIndex;
+    elevator.destinationFloor = requestedFloorIndex;
+    elevator.isMoving = true;
 
     let updatedElevators = elevators.map((e, i) => {
       if (i === elevatorIndex)
@@ -98,7 +99,7 @@ export default function Building() {
     elevator.direction = 'static';
     elevator.isMoving = false;
     elevator.timeToReachFloor = '';
-    elevator.detinationFloor = null;
+    elevator.destinationFloor = null;
 
     let updatedElevators = elevators.map((e, i) => {
       if (i === elevatorIndex)
