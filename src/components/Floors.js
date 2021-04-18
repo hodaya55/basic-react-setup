@@ -1,31 +1,47 @@
-import React, { useState, Component } from 'react'
+import React from 'react'
 import Floor from './Floor'
 import Grid from '@material-ui/core/Grid';
+import Button from 'react-bootstrap/Button'
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-// import Paper from '@material-ui/core/Paper';
-// import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  floorElevatorBtn: {
+    width: '100px',
+    height: '50px',
+    marginLeft: '15px',
+  }
+}));
 
 export default function Floors(props) {
+  const classes = useStyles();
   const callLabel = 'Call';
   const waitingLabel = 'Waiting';
+  const arrivedLabel = 'Arrived';
 
-  const callingElevator = (val) => {
-    props.callingElevator(val)
-    console.log('test caliing child');
-    console.log(val);
+  const floorBtnPressed = (floorIndexPressed) => {
+    props.floorBtnPressed(floorIndexPressed);
+  }
+
+  const displayBtn = (floor) => {
+    const reachedFloor = props.elevators.filter((e, i) => (e.currentFloorIndex === floor.floorIndex));
+    console.log(floor);
+    console.log(reachedFloor);
+    // if (reachedFloor) { // TODO
+    if (reachedFloor && !floor.isPending) {
+      return <Button variant={floor.isPending ? 'danger' : 'success'} onClick={() => floorBtnPressed(floor.floorIndex)} className={classes.floorElevatorBtn}>{floor.isPending ? waitingLabel : callLabel}</Button>
+    } else {
+      return <Button variant="outline-success" className={classes.floorElevatorBtn}>{arrivedLabel}</Button>
+    }
   }
 
   return (
     <div style={{ margin: 50 + 'px' }}>
       {props.floors.map((floor, index) => {
         return (
-          <Grid key={index} container spacing={1}>
+          <Grid key={index} container >
             <Grid container item >
               <Floor key={index} {...floor} elevators={props.elevators}></Floor>
-              <Button onClick={() => callingElevator(floor.floorIndex)} style={{ width: 100 + 'px', height: 50 + 'px', backgroundColor: floor.isPending ? 'red' : '#9ae143' }} variant="contained" >
-                {floor.isPending ? waitingLabel : callLabel}
-              </Button>
+              {displayBtn(floor)}
             </Grid>
           </Grid>
         )

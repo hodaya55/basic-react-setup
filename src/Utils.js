@@ -11,7 +11,8 @@ export const generateFloors = () => {
     { name: '6th' },
     { name: '7th' },
     { name: '8th' },
-    { name: '9th' }]
+    { name: '9th' }];
+
   let _floors = floors.map((floor, i) => {
     floor['floorIndex'] = i;
     floor['isPending'] = false;
@@ -23,11 +24,11 @@ export const generateFloors = () => {
 
 export const generateElevators = () => {
   const elevators = [
-    { currentFloorIndex: 0, isMoving: false, statusDirection: 'static' },
-    { currentFloorIndex: 0, isMoving: false, statusDirection: 'static' },
-    { currentFloorIndex: 0, isMoving: false, statusDirection: 'static' },
-    { currentFloorIndex: 0, isMoving: false, statusDirection: 'static' },
-    { currentFloorIndex: 0, isMoving: false, statusDirection: 'static' },
+    { currentFloorIndex: 0, isMoving: null, direction: 'static' },
+    { currentFloorIndex: 0, isMoving: null, direction: 'static' },
+    { currentFloorIndex: 0, isMoving: null, direction: 'static' },
+    { currentFloorIndex: 0, isMoving: null, direction: 'static' },
+    { currentFloorIndex: 0, isMoving: null, direction: 'static' },
   ]
 
   return elevators;

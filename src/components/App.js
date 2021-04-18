@@ -1,12 +1,11 @@
-// import logo from './logo.svg';
 import './App.css';
 import Building from './Building';
-import Elevator from "./Elevator"
 
 function App() {
+
+  // TODO: create an entry point to the application
   return (
     <div >
-      {/* <Elevator color="red" /> */}
       <Building />
     </div>
   );
