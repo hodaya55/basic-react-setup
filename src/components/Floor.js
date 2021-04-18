@@ -30,7 +30,7 @@ export default function Floor(props) {
       {props.elevators.map((e, i) =>
         <div className={classes.box} key={i}>
           {e.currentFloorIndex === props.floorIndex ? <Elevator {...e} /> :
-            e.detinationFloor === props.floorIndex ? <span className="center"> {e.timeToReachFloor}</span> : ''}
+            e.destinationFloor === props.floorIndex ? <span className="center"> {e.timeToReachFloor}</span> : ''}
         </div>
       )}
     </React.Fragment>
